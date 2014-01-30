@@ -1,9 +1,6 @@
-
 # Python VM Runtime 'hello world' example
 
-A simple Python VM Runtime 'hello world' example, which includes examples of start/stop
-handlers, accesses the 'users' service, and shows how to get information about
-the current instance.
+A simple Python VM Runtime 'hello world' example, which accesses the 'Users' service, and shows how to get information about the current instance.
 
 ## Project Setup, Installation, and Configuration
 
