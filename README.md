@@ -4,27 +4,42 @@ Copyright (C) 2014 Google Inc.
 
 A simple Python VM Runtime 'hello world' example, which accesses the 'Users' service, and shows how to get information about the current instance.
 
-## Project Setup, Installation, and Configuration
+You can run this application only on the [App Engine VM Runtime][1]. Currently, the VM Runtime is in Beta, and as such may be subject to backward-incompatible changes.
 
-You can run this application only on the [App Engine VM
-Runtime][1]. Currently, the VM Runtime is part of the Early Access Program, and
-only the participants are able to run this application.
+## Project Setup
+
+Create a billing enabled project and install the Google Cloud SDK as described [here](https://cloud.google.com/appengine/docs/python/managed-vms/#install-sdk) (this includes [installing Docker](https://cloud.google.com/appengine/docs/python/managed-vms/#install-docker))
+
+### Installing boot2docker on Linux (Workaround)
+
+First install VirtualBox if you do not already have it:
+
+```
+sudo apt-get install VirtualBox
+```
+
+Next clone into the boot2docker-cli repository, and make it.
+
+```
+git clone https://github.com/boot2docker/boot2docker-cli
+cd boot2docker-cli
+make
+```
+
+Finally, start the daemon:
+
+```
+$(path_to_boot2docker_repo)/boot2docker-cli/boot2docker-$(version)-linux-$(processor) up
+```
+
+Then continue with Docker installation as described above
 
 ## Deploying
 
-1. Make sure that you are invited to the VM Runtime Trusted Tester
-   Program, and [download the SDK](http://commondatastorage.googleapis.com/gae-vm-runtime-tt/vmruntime_sdks.html).
-2. Update the `application` value of the `app.yaml` file from
-   `your-app-id` to the app-id which is whitelisted for the VM Runtime
-   Trusted Tester Program.
-3. Run the `appcfg.py` script from the VM Runtime SDK as follows:
-
-        $ $SDK_DIR/appcfg.py -R -s preview.appengine.google.com update <directory>
-
-4. Visit `http://your-app-id.appspot.com/`.
+After successfully setting up your project, you can either [run locally](https://cloud.google.com/appengine/docs/python/managed-vms/sdk#run-local), or [deploy to production](https://cloud.google.com/appengine/docs/python/managed-vms/sdk#deploy)
 
 ## Licensing
 
 * See LICENSE
 
-[1]: https://docs.google.com/document/d/1VH1oVarfKILAF_TfvETtPPE3TFzIuWqsa22PtkRkgJ4
+[1]: https://cloud.google.com/appengine/docs/managed-vms/
