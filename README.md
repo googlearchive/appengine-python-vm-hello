@@ -21,8 +21,8 @@ $ sudo apt-get install VirtualBox
 Next download the [latest boot2docker release](https://github.com/boot2docker/boot2docker-cli/releases) and then start the daemon:
 
 ```
-$ $(path_to_download)/boot2docker-$(version)-linux-$(processor) init
-$ $(path_to_download)/boot2docker-$(version)-linux-$(processor) up
+$ <path_to_download>/boot2docker-<version>-linux-<processor> init
+$ <path_to_download>/boot2docker-<version>-linux-<processor> up
 
 ```
 
