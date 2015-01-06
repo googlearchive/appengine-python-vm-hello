@@ -10,7 +10,7 @@ You can run this application only on the [App Engine VM Runtime][1]. Currently, 
 
 Create a billing enabled project and install the Google Cloud SDK as described [here](https://cloud.google.com/appengine/docs/python/managed-vms/#install-sdk) (this includes [installing Docker](https://cloud.google.com/appengine/docs/python/managed-vms/#install-docker))
 
-### Installing boot2docker on Linux (Workaround)
+### Installing boot2docker on Linux
 
 First install VirtualBox if you do not already have it:
 
@@ -26,7 +26,7 @@ $ $(path_to_download)/boot2docker-$(version)-linux-$(processor) up
 
 ```
 
-Then continue with Docker installation as described above
+Then continue with the Docker installation as described above
 
 ## Deploying
 
