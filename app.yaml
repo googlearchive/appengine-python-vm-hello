@@ -1,5 +1,4 @@
 # Demo app.
-application: your-app-id
 version: hello
 runtime: python27
 api_version: 1
