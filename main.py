@@ -1,6 +1,5 @@
-"""A simple 'hello world' sample, which includes examples of start/stop
-handlers, accesses the 'users' service, and shows how to get information about
-the current instance.
+"""A simple 'hello world' sample, which accesses the 'users' service,
+and shows how to get information about the current instance.
 """
 
 import logging
