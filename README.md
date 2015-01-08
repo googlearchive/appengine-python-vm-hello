@@ -1,10 +1,10 @@
 Copyright (C) 2014 Google Inc.
 
-# Sample 'hello world' application for use with the App Engine Python VM Runtime.
+# Sample 'hello world' application for use with the App Engine Python Managed VMs.
 
 A simple Python VM Runtime 'hello world' example, which accesses the 'Users' service, and shows how to get information about the current instance.
 
-You can run this application only on the [App Engine VM Runtime][1]. Currently, the VM Runtime is in Beta, and as such may be subject to backward-incompatible changes.
+You can run this application only on the [App Engine Managed VMs][1]. Currently, Managed VMs are in Beta, and as such may be subject to backward-incompatible changes.
 
 ## Project Setup
 
