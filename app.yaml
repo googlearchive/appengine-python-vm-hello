@@ -8,9 +8,6 @@ vm: true
 manual_scaling:
   instances: 1
 
-vm_settings:
-  machine_type: n1-standard-1  # == Default
-
 handlers:
 
 # Favicon.  Without this, the browser hits this once per page view.
