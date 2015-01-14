@@ -12,6 +12,7 @@ install:
         - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
         - sudo apt-get update
         - sudo apt-get install linux-headers-generic
+        - sudo apt-get install linux-headers-server
         - sudo apt-get install virtualbox
         - pip install PyOpenSSL
 
