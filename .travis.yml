@@ -12,6 +12,7 @@ install:
         - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
         - sudo apt-get update
         - sudo apt-get install virtualbox
+        - sudo apt-get install virtualbox-ose
         - sudo dpkg-reconfigure virtualbox-dkms
         - sudo dpkg-reconfigure virtualbox
         - # dkms install virtualbox/<version> $ sudo dkms install virtualbox/4.1.12
