@@ -11,8 +11,9 @@ before_install:
 install:
         - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
         - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
-        - sudo apt-get install libsdl1.2debian libvpx1
+        - sudo apt-get update
         - sudo apt-get install linux-headers-generic
+        - sudo apt-get install libsdl1.2debian libvpx1
         - sudo apt-get install dkms
         - sudo dpkg -i virtualbox-4.3_4.3.20-96996~Ubuntu~precise_amd64.deb
         - pip install PyOpenSSL
