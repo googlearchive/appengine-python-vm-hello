@@ -10,13 +10,14 @@ before_install:
         - wget http://download.openvz.org/kernel/branches/rhel6-2.6.32/042stab090.5/linux-headers-2.6.32-openvz-042stab090.5-amd64_1_amd64.deb
 
 install:
-        - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
-        - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
         - sudo apt-get update
         - sudo apt-get install libsdl1.2debian libvpx1
         - sudo dpkg -i linux-headers-2.6.32-openvz-042stab090.5-amd64_1_amd64.deb
         - sudo dpkg -i virtualbox-4.3_4.3.20-96996~Ubuntu~precise_amd64.deb
+        - sudo /etc/init.d/vboxdrv setup
         - pip install PyOpenSSL
+        - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
+        - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
 
 before_script:
         - chmod u+x ./boot2docker-v1.4.1-linux-amd64
