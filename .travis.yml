@@ -4,10 +4,10 @@ python:
 
 before_install:
         #Set up remote docker
-        - mkdir -p ~/.docker
-        - echo $CA > ~/.docker/ca.pem
-        - echo $CERT > ~/.docker/cert.pem
-        - echo $KEY > ~/.docker/key.pem
+        - mkdir -p $HOME/.docker
+        - echo $CA > $HOME/.docker/ca.pem
+        - echo $CERT > $HOME/.docker/cert.pem
+        - echo $KEY > $HOME/.docker/key.pem
         - export DOCKER_TLS_VERIFY=1
         - export DOCKER_CERT_PATH=$HOME/.docker
 
