@@ -15,8 +15,8 @@ install:
 
 before_script:
         - chmod u+x ./boot2docker-v1.4.1-linux-amd64
-        - rm -r ~/VirtualBox\ VMs/boot2docker-vm
-        - ./boot2docker-v1.4.1-linux-amd64 init
+        - rm -rf ~/VirtualBox\ VMs/boot2docker-vm
+        - ./boot2docker-v1.4.1-linux-amd64 init -v
         - ./boot2docker-v1.4.1-linux-amd64 up
         - $(./boot2docker-v1.4.1-linux-amd64 shellinit)
         - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
