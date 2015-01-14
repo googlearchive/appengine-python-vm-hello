@@ -10,6 +10,7 @@ before_install:
         - echo $KEY > $HOME/.docker/key.pem
         - export DOCKER_TLS_VERIFY=1
         - export DOCKER_CERT_PATH=$HOME/.docker
+        - ls $DOCKER_CERT_PATH
 
         #Install gcloud
         - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
