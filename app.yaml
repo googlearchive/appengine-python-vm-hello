@@ -1,7 +1,7 @@
 # Demo app.
 version: hello
 runtime: python27
-api_version: 1
+api_version: hello-sample-appengine-vm-python
 threadsafe: true
 vm: true
 
