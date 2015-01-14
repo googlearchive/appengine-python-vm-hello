@@ -15,7 +15,7 @@ install:
 
 before_script:
         - chmod u+x ./boot2docker-v1.4.1-linux-amd64
-        - rm -r /user/$USER/VirtualBox\ VMs/boot2docker-vm
+        - rm -r ~/VirtualBox\ VMs/boot2docker-vm
         - ./boot2docker-v1.4.1-linux-amd64 init
         - ./boot2docker-v1.4.1-linux-amd64 up
         - $(./boot2docker-v1.4.1-linux-amd64 shellinit)
