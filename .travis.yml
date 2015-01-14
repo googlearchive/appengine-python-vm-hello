@@ -9,7 +9,7 @@ before_install:
 
 install:
         - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
-        - ./google-cloud-sdk/bin/gcloud components update app
+        - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
         - sudo apt-get install VirtualBox
         - pip install PyOpenSSL
 
