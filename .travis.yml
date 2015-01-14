@@ -26,6 +26,8 @@ install:
         - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
         - pip install PyOpenSSL
 
+        - printf '1\n' > gcloud preview app setup-managed-vms
+
 script:
         - ./google-cloud-sdk/bin/gcloud preview app deploy . --version hello-sample-appengine-vm-python
         - python test.py
