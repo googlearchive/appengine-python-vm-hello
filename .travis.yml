@@ -1,0 +1,29 @@
+language: python
+python:
+        - "2.7"
+
+before_install: wget -P ~/ https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
+        tar -xzf ~/google-cloud-sdk.tar.gz ~/
+        wget -P ~/ https://github.com/boot2docker/boot2docker-cli/releases/download/v1.4.1/boot2docker-v1.4.1-linux-amd64
+
+install: printf '\ny\n\ny\ny\n' | ~/google-cloud-sdk/install.sh
+        gcloud components update app
+        sudo apt-get install VirtualBox
+        pip install PyOpenSSL
+
+before_script: chmod u+x ~/boot2docker-v1.4.1-linux-amd64
+        ~/boot2docker-v1.4.1-linux-amd64 init
+        ~/boot2docker-v1.4.1-linux-amd64 up
+        $(~/boot2docker-v1.4.1-linux-amd64 shellinit)
+        gcloud config set project $PROJECT_ID
+        export CLOUDSDK_PYTHON_SITEPACKAGES=1
+        echo $CREDENTIALS_JSON > credentials.json
+        gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
+        rm credentials.json
+        gcloud preview app deploy . --version hello-sample-appengine-vm-python
+
+script: python test.py
+
+
+
+
