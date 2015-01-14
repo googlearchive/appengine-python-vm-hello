@@ -9,7 +9,7 @@ before_install:
 
 install:
         - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
-        - gcloud components update app
+        - ./google-cloud-sdk/bin/gcloud components update app
         - sudo apt-get install VirtualBox
         - pip install PyOpenSSL
 
@@ -18,12 +18,12 @@ before_script:
         - ./boot2docker-v1.4.1-linux-amd64 init
         - ./boot2docker-v1.4.1-linux-amd64 up
         - $(./boot2docker-v1.4.1-linux-amd64 shellinit)
-        - gcloud config set project $PROJECT_ID
+        - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
         - export CLOUDSDK_PYTHON_SITEPACKAGES=1
         - echo $CREDENTIALS_JSON > credentials.json
-        - gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
+        - ./google-cloud-sdk/bin/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
         - rm credentials.json
-        - gcloud preview app deploy . --version hello-sample-appengine-vm-python
+        - ./google-cloud-sdk/bin/gcloud preview app deploy . --version hello-sample-appengine-vm-python
 
 script: python test.py
 
