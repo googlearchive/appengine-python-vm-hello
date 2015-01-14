@@ -3,33 +3,29 @@ python:
         - "2.7"
 
 before_install:
+        #Set up remote docker
+        - mkdir -p ~/.docker
+        - echo $CA > ~/.docker/ca.pem
+        - echo $CERT > ~/.docker/cert.pem
+        - echo $KEY > ~/.docker/key.pem
+        - export DOCKER_TLS_VERIFY=1
+        - export DOCKER_CERT_PATH=$HOME/.docker
+
+        #Install gcloud
         - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
         - tar xzf google-cloud-sdk.tar.gz
-        - wget https://github.com/boot2docker/boot2docker-cli/releases/download/v1.4.1/boot2docker-v1.4.1-linux-amd64
-        - wget http://download.virtualbox.org/virtualbox/4.3.20/virtualbox-4.3_4.3.20-96996~Ubuntu~precise_amd64.deb
-        - wget http://download.openvz.org/kernel/branches/rhel6-2.6.32/042stab090.5/linux-headers-2.6.32-openvz-042stab090.5-amd64_1_amd64.deb
-
-install:
-        - sudo apt-get update
-        - sudo apt-get install libsdl1.2debian libvpx1
-        - sudo dpkg -i linux-headers-2.6.32-openvz-042stab090.5-amd64_1_amd64.deb
-        - sudo dpkg -i virtualbox-4.3_4.3.20-96996~Ubuntu~precise_amd64.deb
-        - sudo /etc/init.d/vboxdrv setup
-        - pip install PyOpenSSL
         - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
-        - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
 
-before_script:
-        - chmod u+x ./boot2docker-v1.4.1-linux-amd64
-        - rm -rf ~/VirtualBox\ VMs/boot2docker-vm
-        - ./boot2docker-v1.4.1-linux-amd64 init -v
-        - ./boot2docker-v1.4.1-linux-amd64 up
-        - $(./boot2docker-v1.4.1-linux-amd64 shellinit)
+        #Authenticate with gcloud
         - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
         - export CLOUDSDK_PYTHON_SITEPACKAGES=1
         - echo $CREDENTIALS_JSON > credentials.json
         - ./google-cloud-sdk/bin/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
-        - rm credentials.json
-        - ./google-cloud-sdk/bin/gcloud preview app deploy . --version hello-sample-appengine-vm-python
 
-script: python test.py
+install:
+        - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
+        - pip install PyOpenSSL
+
+script:
+        - ./google-cloud-sdk/bin/gcloud preview app deploy . --version hello-sample-appengine-vm-python
+        - python test.py
