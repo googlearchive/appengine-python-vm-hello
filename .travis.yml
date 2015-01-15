@@ -8,10 +8,8 @@ before_install:
         - printf -- "$CA" > $HOME/.docker/ca.pem
         - printf -- "$CERT" > $HOME/.docker/cert.pem
         - printf -- "$KEY" > $HOME/.docker/key.pem
-        - echo `cat $HOME/.docker/key.pem`
         - export DOCKER_TLS_VERIFY=1
         - export DOCKER_CERT_PATH=$HOME/.docker
-        - ls $DOCKER_CERT_PATH
 
         #Install gcloud
         - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
@@ -21,14 +19,13 @@ before_install:
         #Authenticate with gcloud
         - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
         - export CLOUDSDK_PYTHON_SITEPACKAGES=1
-        - echo $CREDENTIALS_JSON > credentials.json
+        - printf -- "$CREDENTIALS_JSON" > credentials.json
+        - echo `cat credentials.json`
         - ./google-cloud-sdk/bin/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
 
 install:
         - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
         - pip install PyOpenSSL
-
-        - printf '1\n' > gcloud preview app setup-managed-vms
 
 script:
         - ./google-cloud-sdk/bin/gcloud preview app deploy . --version hello-sample-appengine-vm-python
