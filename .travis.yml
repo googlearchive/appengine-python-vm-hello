@@ -16,6 +16,9 @@ before_install:
         - tar xzf google-cloud-sdk.tar.gz
         - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
 
+        #TEMP: patch gcloud
+        - cp -f ./registry_patch.py $TRAVIS_BUILD_DIR/./google-cloud-sdk/.lib/googlecloudsdk/appengine/lib/images/registry.py
+
         #Authenticate with gcloud
         - pip install PyOpenSSL
         - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
