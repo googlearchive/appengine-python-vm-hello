@@ -17,6 +17,7 @@ before_install:
         - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
 
         #Authenticate with gcloud
+        - pip install PyOpenSSL
         - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
         - export CLOUDSDK_PYTHON_SITEPACKAGES=1
         - printf -- "$CREDENTIALS_JSON" > credentials.json
@@ -25,7 +26,6 @@ before_install:
 
 install:
         - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
-        - pip install PyOpenSSL
 
 script:
         - ./google-cloud-sdk/bin/gcloud preview app deploy . --version hello-sample-appengine-vm-python
