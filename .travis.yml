@@ -21,7 +21,6 @@ before_install:
         - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
         - export CLOUDSDK_PYTHON_SITEPACKAGES=1
         - printf -- "$CREDENTIALS_JSON" > credentials.json
-        - echo `cat credentials.json`
         - ./google-cloud-sdk/bin/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
 
 install:
