@@ -28,9 +28,6 @@ before_install:
                 cd $TRAVIS_BUILD_DIR;
           fi
 
-        #TEMP: patch gcloud
-        - cp -f ./registry_patch.py $HOME/gcloud/google-cloud-sdk/lib/googlecloudsdk/appengine/lib/images/registry.py
-
         #Authenticate with gcloud
         - pip install PyOpenSSL
         - $GCLOUD/gcloud config set project $PROJECT_ID
@@ -39,6 +36,8 @@ before_install:
 
 install:
         - printf 'y\n' | $GCLOUD/gcloud components update app
+        #TEMP: patch gcloud
+        - cp -f ./registry_patch.py $HOME/gcloud/google-cloud-sdk/lib/googlecloudsdk/appengine/lib/images/registry.py
 
 script:
         - $GCLOUD/gcloud preview app deploy . --remote --version hello-sample-appengine-vm-python
