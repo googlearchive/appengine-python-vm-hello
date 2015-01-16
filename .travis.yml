@@ -10,10 +10,7 @@ cache:
                 - /home/travis/virtualenv/python2.7/lib/python2.7/site-packages
 
 env:
-        - DOCKER_TLS_VERIFY=1
-        - DOCKER_CERT_PATH=$HOME/.docker
-        - GCLOUD=$HOME/gcloud/google-cloud-sdk/bin
-        - CLOUDSDK_PYTHON_SITEPACKAGES=1
+        - DOCKER_TLS_VERIFY=1 DOCKER_CERT_PATH=$HOME/.docker GCLOUD=$HOME/gcloud/google-cloud-sdk/bin CLOUDSDK_PYTHON_SITEPACKAGES=1
 
 
 before_install:
