@@ -10,12 +10,12 @@ from collections import namedtuple
 import json
 import time
 
-from googlecloudsdk.appengine.lib import appengine_code_importer
-from googlecloudsdk.appengine.lib.images import config
-from googlecloudsdk.core import log
-from googlecloudsdk.core import properties
-from googlecloudsdk.core.util import constants as const_lib
-from googlecloudsdk.core.util import docker as docker_lib
+from google3.cloud.sdk.appengine.lib import appengine_code_importer
+from google3.cloud.sdk.appengine.lib.images import config
+from google3.cloud.sdk.core import log
+from google3.cloud.sdk.core import properties
+from google3.cloud.sdk.core.util import constants as const_lib
+from google3.cloud.sdk.core.util import docker as docker_lib
 
 with appengine_code_importer.Importer() as importer:
   containers = importer.Import('tools.docker.containers')
@@ -107,6 +107,14 @@ def _Sanitize(string):
   return string.replace('-', '_')
 
 
+def _StripDomain(project_id):
+  """This strips the domain from an appid, if qualified with one."""
+  split_id = project_id.split(':')
+  if len(split_id) == 1:
+    return split_id[0]
+  return split_id[1]
+
+
 class _GoogleContainerRegistry(_Registry):
   """Google Container Engine Registry."""
 
@@ -134,9 +142,8 @@ class _GoogleContainerRegistry(_Registry):
 
   def GetRepoImageTag(self, image_tag):
     if self._options.project_id:
-      return '%s/_m_%s/%s' % (self.addr,
-                              _Sanitize(self._options.project_id),
-                              image_tag)
+      display = _StripDomain(self._options.project_id)
+      return '%s/_m_%s/%s' % (self.addr, _Sanitize(display), image_tag)
     else:
       # NOTE: we only expect to see containers-{qa, prod} on this
       # path, so this is a safe substitution.
@@ -197,6 +204,36 @@ class _LocalRegistry(_Registry):
     return 'localhost:%s/%s' % (self._registry.port, image_tag)
 
 
+def ProgressHandler(action, func_with_output_lines):
+  """Handles the streaming output of the docker client.
+
+  Args:
+    action: str, action verb for logging purposes, for example "push" or "pull".
+    func_with_output_lines: a function streaming output from the docker client.
+  Raises:
+    Error: if a problem occured during the operation with an explanation
+           string if possible.
+  """
+  for line in func_with_output_lines():
+    log_record = json.loads(line.strip())
+    if 'status' in log_record:
+      feedback = log_record['status'].strip()
+      if 'progress' in log_record:
+        feedback += ': ' + log_record['progress'] + '\r'
+      else:
+        feedback += '\n'
+      log.err.write(feedback)
+    elif 'error' in log_record:
+      error = log_record['error'].strip()
+      log.error(error)
+      raise Error('Unable to %s the image to/from the registry: "%s"' %
+                  (action, error))
+    elif 'errorDetail' in log_record:
+      error_detail = log_record['errorDetail'] or 'Unknown Error'
+      raise Error('Unable to push the image to the registry: "%s"'
+                  % error_detail)
+
+
 class Registry(object):
   """Docker Registry."""
 
@@ -237,30 +274,14 @@ class Registry(object):
     repo_image_tag = self._GetRepoImageTag(image.tag)
     self.docker_client.tag(image.id, repo_image_tag, force=True)
 
-    def InnerPush():
-      output_lines = self.docker_client.push(
-          repo_image_tag, stream=True, insecure_registry=True)
-
-      for line in output_lines:
-        log_record = json.loads(line.strip())
-        if 'status' in log_record:
-          feedback = log_record['status']
-          if 'progress' in log_record:
-            feedback += ': ' + log_record['progress'] + '\r'
-          else:
-            feedback += '\n'
-          log.err.write(feedback)
-        elif 'error' in log_record:
-          error = log_record['error']
-          log.error(error)
-          raise Error('Unable to push the image to the registry: "%s"' % error)
-        elif 'errorDetail' in log_record:
-          error_detail = log_record['errorDetail']
-          log.error(error_detail)
-          raise Error('Unable to push the image to the registry: "%s"'
-                      % error_detail)
     log.err.write('Pushing image to Google Cloud Storage...\n')
-    _Retry(InnerPush)
+
+    def InnerPush():
+      return self.docker_client.push(repo_image_tag,
+                                     stream=True,
+                                     insecure_registry=True)
+
+    _Retry(ProgressHandler, 'push', InnerPush)
 
   def _WaitForImageReady(self, image_name):
     """Waits until image with image_name can be found."""
@@ -281,13 +302,13 @@ class Registry(object):
     """
     log.info('Pulling image %s:%s from Google Cloud Storage...', image, version)
     repo_image_tag = self._GetRepoImageTag(image)
-    status = _Retry(self.docker_client.pull,
-                    repo_image_tag,
-                    tag=version,
-                    insecure_registry=True)
+    def InnerPull():
+      return self.docker_client.pull(repo_image_tag,
+                                     stream=True,
+                                     tag=version,
+                                     insecure_registry=True)
 
-    # TODO(user) parse status and print only part of it.
-    log.debug(status)
+    _Retry(ProgressHandler, 'pull', InnerPull)
 
     # Guarantee that download of the repo_image_tag has finished to safely
     # retag the image.
