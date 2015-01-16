@@ -4,9 +4,7 @@ python:
         - "2.7"
 cache:
         directories:
-                - $DOCKER_CERT_PATH
                 - $HOME/gcloud/
-                - $HOME/.pip-cache/
                 - /home/travis/virtualenv/python2.7/lib/python2.7/site-packages
 
 env:
@@ -15,14 +13,13 @@ env:
 
 before_install:
         #Set up remote docker
-        - if [! -d $DOCKER_CERT_PATH ]; then
-                mkdir -p $DOCKER_CERT_PATH
-                printf -- "$CA" > $DOCKER_CERT_PATH/ca.pem
-                printf -- "$CERT" > $DOCKER_CERT_PATH/cert.pem
-                printf -- "$KEY" > $DOCKER_CERT_PATH/key.pem;
-          fi
+        - mkdir -p $DOCKER_CERT_PATH
+        - printf -- "$CA" > $DOCKER_CERT_PATH/ca.pem
+        - printf -- "$CERT" > $DOCKER_CERT_PATH/cert.pem
+        - printf -- "$KEY" > $DOCKER_CERT_PATH/key.pem
+
         #Install gcloud
-        - if [ ! -d $HOME/gcloud ]; then
+        - if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then
                 mkdir -p $HOME/gcloud
                 wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=$HOME/gcloud
                 cd $HOME/gcloud
