@@ -15,7 +15,7 @@ Create a billing enabled project and install the Google Cloud SDK as described [
 First install VirtualBox if you do not already have it:
 
 ```
-$ sudo apt-get install VirtualBox
+$ sudo apt-get install virtualbox
 ```
 
 Next download the [latest boot2docker release](https://github.com/boot2docker/boot2docker-cli/releases) and then start the daemon:
