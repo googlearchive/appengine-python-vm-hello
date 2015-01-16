@@ -10,12 +10,12 @@ from collections import namedtuple
 import json
 import time
 
-from google3.cloud.sdk.appengine.lib import appengine_code_importer
-from google3.cloud.sdk.appengine.lib.images import config
-from google3.cloud.sdk.core import log
-from google3.cloud.sdk.core import properties
-from google3.cloud.sdk.core.util import constants as const_lib
-from google3.cloud.sdk.core.util import docker as docker_lib
+from googlecloudsdk.appengine.lib import appengine_code_importer
+from googlecloudsdk.appengine.lib.images import config
+from googlecloudsdk.core import log
+from googlecloudsdk.core import properties
+from googlecloudsdk.core.util import constants as const_lib
+from googlecloudsdk.core.util import docker as docker_lib
 
 with appengine_code_importer.Importer() as importer:
   containers = importer.Import('tools.docker.containers')
