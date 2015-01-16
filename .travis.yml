@@ -1,34 +1,51 @@
+sudo: false
 language: python
 python:
         - "2.7"
+cache:
+        directories:
+                - $DOCKER_CERT_PATH
+                - $HOME/gcloud/
+                - $HOME/.pip-cache/
+                - /home/travis/virtualenv/python2.7/lib/python2.7/site-packages
+
+env:
+        - DOCKER_TLS_VERIFY=1
+        - DOCKER_CERT_PATH=$HOME/.docker
+        - GCLOUD=$HOME/gcloud/google-cloud-sdk/bin
+        - CLOUDSDK_PYTHON_SITEPACKAGES=1
+
 
 before_install:
         #Set up remote docker
-        - mkdir -p $HOME/.docker
-        - printf -- "$CA" > $HOME/.docker/ca.pem
-        - printf -- "$CERT" > $HOME/.docker/cert.pem
-        - printf -- "$KEY" > $HOME/.docker/key.pem
-        - export DOCKER_TLS_VERIFY=1
-        - export DOCKER_CERT_PATH=$HOME/.docker
-
+        - if [! -d $DOCKER_CERT_PATH ]; then
+                mkdir -p $DOCKER_CERT_PATH
+                printf -- "$CA" > $DOCKER_CERT_PATH/ca.pem
+                printf -- "$CERT" > $DOCKER_CERT_PATH/cert.pem
+                printf -- "$KEY" > $DOCKER_CERT_PATH/key.pem
+          fi
         #Install gcloud
-        - wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
-        - tar xzf google-cloud-sdk.tar.gz
-        - printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
+        - if [ ! -d $HOME/gcloud ]; then
+                mkdir -p $HOME/gcloud
+                wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=$HOME/gcloud
+                cd $HOME/gcloud
+                tar xzf google-cloud-sdk.tar.gz
+                printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
+                cd $TRAVIS_BUILD_DIR
+          fi
 
         #TEMP: patch gcloud
-        - cp -f ./registry_patch.py $TRAVIS_BUILD_DIR/./google-cloud-sdk/.lib/googlecloudsdk/appengine/lib/images/registry.py
+        - cp -f ./registry_patch.py $HOME/gcloud/google-cloud-sdk/lib/googlecloudsdk/appengine/lib/images/registry.py
 
         #Authenticate with gcloud
         - pip install PyOpenSSL
-        - ./google-cloud-sdk/bin/gcloud config set project $PROJECT_ID
-        - export CLOUDSDK_PYTHON_SITEPACKAGES=1
+        - $GCLOUD/gcloud config set project $PROJECT_ID
         - printf -- "$CREDENTIALS_JSON" > credentials.json
-        - ./google-cloud-sdk/bin/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
+        - $GCLOUD/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
 
 install:
-        - printf 'y\n' | ./google-cloud-sdk/bin/gcloud components update app
+        - printf 'y\n' | $GCLOUD/gcloud components update app
 
 script:
-        - ./google-cloud-sdk/bin/gcloud preview app deploy . --remote --version hello-sample-appengine-vm-python
+        - $GCLOUD/gcloud preview app deploy . --remote --version hello-sample-appengine-vm-python
         - python test.py
