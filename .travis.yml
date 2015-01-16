@@ -19,7 +19,7 @@ before_install:
                 mkdir -p $DOCKER_CERT_PATH
                 printf -- "$CA" > $DOCKER_CERT_PATH/ca.pem
                 printf -- "$CERT" > $DOCKER_CERT_PATH/cert.pem
-                printf -- "$KEY" > $DOCKER_CERT_PATH/key.pem
+                printf -- "$KEY" > $DOCKER_CERT_PATH/key.pem;
           fi
         #Install gcloud
         - if [ ! -d $HOME/gcloud ]; then
@@ -28,7 +28,7 @@ before_install:
                 cd $HOME/gcloud
                 tar xzf google-cloud-sdk.tar.gz
                 printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh
-                cd $TRAVIS_BUILD_DIR
+                cd $TRAVIS_BUILD_DIR;
           fi
 
         #TEMP: patch gcloud
