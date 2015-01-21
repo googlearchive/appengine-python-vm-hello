@@ -39,5 +39,5 @@ install:
         #cp -f ./registry_patch.py $HOME/gcloud/google-cloud-sdk/lib/googlecloudsdk/appengine/lib/images/registry.py
 
 script:
-        - $GCLOUD/gcloud preview app deploy . --server=gcr.appengine.google.com
+        - $GCLOUD/gcloud preview app deploy . --remote --server=gcr.appengine.google.com
         - python test.py
