@@ -38,7 +38,7 @@ install:
         - printf 'y\n' | $GCLOUD/gcloud components update app
         - $GCLOUD/gcloud config set app/hosted_registry true
         #TEMP: patch gcloud
-        - cp -f ./registry_patch.py $HOME/gcloud/google-cloud-sdk/lib/googlecloudsdk/appengine/lib/images/registry.py
+        #cp -f ./registry_patch.py $HOME/gcloud/google-cloud-sdk/lib/googlecloudsdk/appengine/lib/images/registry.py
 
 script:
         - $GCLOUD/gcloud preview app deploy . --remote --version hello-sample-appengine-vm-python
