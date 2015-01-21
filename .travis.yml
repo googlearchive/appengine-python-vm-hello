@@ -31,7 +31,7 @@ before_install:
         #Authenticate with gcloud
         - pip install PyOpenSSL
         - $GCLOUD/gcloud config set project $PROJECT_ID
-        - printf -- "CREDENTIALS_JSON" > credentials.json
+        - printf -- "$CREDENTIALS_JSON" > credentials.json
         - $GCLOUD/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
 
 install:
