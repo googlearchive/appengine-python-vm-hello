@@ -1,0 +1,41 @@
+sudo: false
+language: python
+python:
+        - "2.7"
+cache:
+        directories:
+                - $HOME/gcloud/
+
+env:
+        - DOCKER_TLS_VERIFY=1 DOCKER_CERT_PATH=$HOME/.docker GCLOUD=$HOME/gcloud/google-cloud-sdk/bin CLOUDSDK_PYTHON_SITEPACKAGES=1
+
+
+before_install:
+        #Set up remote docker
+        - mkdir -p $DOCKER_CERT_PATH
+        - printf -- "$CA" > $DOCKER_CERT_PATH/ca.pem
+        - printf -- "$CERT" > $DOCKER_CERT_PATH/cert.pem
+        - printf -- "$KEY" > $DOCKER_CERT_PATH/key.pem
+
+        #Install gcloud
+        - if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then
+                mkdir -p $HOME/gcloud &&
+                wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=$HOME/gcloud &&
+                cd $HOME/gcloud &&
+                tar xzf google-cloud-sdk.tar.gz &&
+                printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh &&
+                cd $TRAVIS_BUILD_DIR;
+          fi
+
+        #Authenticate with gcloud
+        - $GCLOUD/gcloud config set project $PROJECT_ID
+        - echo "$CREDENTIALS_JSON" > credentials.json
+        - $GCLOUD/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
+
+install:
+        - printf 'y\n' | $GCLOUD/gcloud components update app
+        - $GCLOUD/gcloud config set app/hosted_registry true
+
+script:
+        - $GCLOUD/gcloud preview app deploy . --remote --server=gcr.appengine.google.com
+        - python test.py
