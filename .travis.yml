@@ -5,7 +5,6 @@ python:
 cache:
         directories:
                 - $HOME/gcloud/
-                - /home/travis/virtualenv/python2.7/lib/python2.7/site-packages
 
 env:
         - DOCKER_TLS_VERIFY=1 DOCKER_CERT_PATH=$HOME/.docker GCLOUD=$HOME/gcloud/google-cloud-sdk/bin CLOUDSDK_PYTHON_SITEPACKAGES=1
@@ -29,7 +28,6 @@ before_install:
           fi
 
         #Authenticate with gcloud
-        - pip install PyOpenSSL
         - $GCLOUD/gcloud config set project $PROJECT_ID
         - echo "$CREDENTIALS_JSON" > credentials.json
         - $GCLOUD/gcloud auth activate-service-account $ACCOUNT --key-file credentials.json
