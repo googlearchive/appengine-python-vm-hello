@@ -1,3 +1,3 @@
 node {
-	echo 'hello'
+	print 'testing'
 }
