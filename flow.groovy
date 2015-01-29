@@ -1,3 +1,3 @@
 node {
-	gcloud preview app deploy .
+	sh "gcloud preview app deploy ."
 }
