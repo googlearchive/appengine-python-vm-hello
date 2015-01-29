@@ -1,3 +1,3 @@
 node {
-	print 'testing'
+	gcloud preview app deploy .
 }
