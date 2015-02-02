@@ -1,7 +1,7 @@
 
 node('master'){
 	def slurper = new groovy.json.JsonSlurper()
-	def template_file = new File('pod_template.json)
+	def template_file = new File('pod_template.jsoni')
 	def pod = slurper.parse(template_file)
 	pod.setId(env.BUILD_TAG)	
 	kube_create_pod: pod
