@@ -1,6 +1,6 @@
 
 node('master'){
-	kube_create: "pods", [
+	kube_create("pods", [
 		"id": env.BUILD_TAG,
 		"kind": "Pod",
 		"apiVersion": "v1beta1",
@@ -25,7 +25,7 @@ node('master'){
 				]]
 			]
 		]
-	]
+	])
 }
 
 node(env.BUILD_TAG) {
