@@ -1,10 +1,31 @@
 
 node('master'){
-	def slurper = new groovy.json.JsonSlurper()
-	def template_file = new File('pod_template.jsoni')
-	def pod = slurper.parse(template_file)
-	pod.setId(env.BUILD_TAG)	
-	kube_create_pod: pod
+	kube_create: "pods", [
+		"id": env.BUILD_TAG,
+		"kind": "Pod",
+		"apiVersion": "v1beta1",
+		"desiredState": [
+			"manifest": [
+				"version": "v1beta1",
+				"containers": [[
+					"name": "jenkinsslave",
+					"image": "elibixby/jenkins_slave",
+					"volumeMounts": [
+						"name": "docksock",
+						"mountpath": "/var/run"
+					]
+				]],
+				"volumes": [[
+					"name": "docksock",
+					"source": [
+						"hostDir": [
+							"path": "/var/run"
+						]
+					]
+				]]
+			]
+		]
+	]
 }
 
 node(env.BUILD_TAG) {
