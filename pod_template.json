@@ -1,0 +1,34 @@
+{
+	"id": "jenkinsslave1",
+	"apiVersion": "v1beta1",
+	"kind": "Pod",
+	"desiredState": {
+		"manifest": {
+			"containers":[
+				{
+					"name": "jenkinsslave",
+					"image": "elibixby/jenkins_slave",
+					"volumeMounts":[
+						{
+							"name": "docksock",
+							"mountPath": "/var/run"
+						}
+					]
+				}
+			],
+			"volumes":[
+				{
+					"name": "docksock",
+					"source": {
+						"hostDir": {
+							"path": "/var/run"
+						}
+					}
+				}
+			]
+		}
+	},
+	"labels": {
+		"role": "slave"
+	}
+}
