@@ -2,7 +2,8 @@
 node('master'){
 	//Vodoo string manipulation:
 	//replaces environmental variables defined in pod_template.json with their binding
-	sh 'perl -p -e \'s/\\$\\{([^}]+)\\}/defined $ENV{$1} ? $ENV{$1} : $&/eg; s/\\$\\{([^}]+)\\}//eg\' ${WORKSPACE}/build/pod_template.json | /usr/bin/kubectl create -f -'
+	//probably better to write a workflow tool for this
+	sh 'perl -p -e \'s/\\$\\{([^}]+)\\}/defined $ENV{$1} ? $ENV{$1} : $&/eg; s/\\$\\{([^}]+)\\}//eg\' $WORKSPACE/build/pod_template.json | $JENKINS_HOME/kubectl create -f -'
 }
 
 node(env.BUILD_TAG) {
