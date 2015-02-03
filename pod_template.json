@@ -1,5 +1,5 @@
 {
-	"id": "jenkinsslave1",
+	"id": ${BUILD_TAG},
 	"apiVersion": "v1beta1",
 	"kind": "Pod",
 	"desiredState": {
