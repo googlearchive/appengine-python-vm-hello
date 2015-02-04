@@ -1,6 +1,6 @@
 
 node('master'){
-	kube_create("pods", "jenkinsmaster1")
+	kube_get("pods", "jenkinsmaster1")
 //[
 //		"id": env.BUILD_TAG,
 //		"kind": "Pod",
