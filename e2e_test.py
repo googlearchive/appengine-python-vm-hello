@@ -9,23 +9,13 @@
 
 
 import urllib2
-import json
-from google.appengine.ext import vendor
-vendor.add('lib')
+import logging
 
-from flask import Flask
-app = Flask(__name__)
+HOST='http://continuous-deployment-python.appspot.com'
 
-from api_key import key
+response = urllib2.urlopen("{}/get_author/ulysses".format(HOST))
+html = response.read()
+assert(html == "James Joyce")
 
-@app.route('/get_author/<title>')
-def get_author(title):
-    host = 'https://www.googleapis.com/books/v1/volume?q={}&key={}&country=US'.format(title, api_key)
-    request = urllib2.Request(host)
-    response = urllib2.urlopen(request)
-    html = response.read()
-    author = json.loads(html)['items'][0]['volumeInfo']['authors'][0]
-    return author
 
-if __name__ == '__main__':
-    app.run(debug=True)
+

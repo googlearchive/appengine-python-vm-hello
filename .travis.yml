@@ -1,34 +1,25 @@
 sudo: false
 language: python
-python:
-        - "2.7"
 cache:
-        directories:
-                - $HOME/gcloud/
-
+  directories:
+  - $HOME/gcloud/
 env:
-        - DOCKER_TLS_VERIFY=1 DOCKER_CERT_PATH=$TRAVIS_BUILD_DIR GCLOUD=$HOME/gcloud/google-cloud-sdk/bin CLOUDSDK_PYTHON_SITEPACKAGES=1 GOOGLE_APPLICATION_CREDENTIALS=$TRAVIS_BUILD_DIR/credentials.json
-
-
+- PATH=$PATH:$HOME/gcloud/google-cloud-sdk/bin PYTHONPATH=${HOME}/gcloud/google-cloud-sdk/platform/google_appengine
 before_install:
-        #secrets
-        openssl aes-256-cbc -K $encrypted_9a4798c88375_key -iv $encrypted_9a4798c88375_iv -in secrets.tar.enc -out secrets.tar -d
-        tar xvf secrets.tar
-
-        #Install gcloud
-        - if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then
-                mkdir -p $HOME/gcloud &&
-                wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz --directory-prefix=$HOME/gcloud &&
-                cd $HOME/gcloud &&
-                tar xzf google-cloud-sdk.tar.gz &&
-                printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh &&
-                cd $TRAVIS_BUILD_DIR;
-          fi
-
+- openssl aes-256-cbc -K $encrypted_4cb330591e04_key -iv $encrypted_4cb330591e04_iv
+  -in cont-deployment.json.enc -out cont-deployment.json -d
+- openssl aes-256-cbc -K $encrypted_4cb330591e04_key -iv $encrypted_4cb330591e04_iv
+  -in api_key.py.enc -out api_key.py -d
+- if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then mkdir -p $HOME/gcloud && wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
+  --directory-prefix=$HOME/gcloud && cd $HOME/gcloud && tar xzf google-cloud-sdk.tar.gz
+  && printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh && cd $TRAVIS_BUILD_DIR;
+  fi
+- if [ -a silver-python.json ]; then gcloud auth activate-service-account --key-file
+  continuous-deployment.json; fi
 install:
-        - printf 'y\n' | $GCLOUD/gcloud components update app
-        - $GCLOUD/gcloud config set app/hosted_registry true
-
+- gcloud config set project continuous-deployment-python 
+- gcloud -q components update gae-python
+- pip install -r requirements.txt -t lib/
 script:
-        - $GCLOUD/gcloud preview app deploy . --remote --server=gcr.appengine.google.com
-        - python test.py
+- gcloud -q preview app deploy app.yaml --set-default
+- python e2e_test.py
