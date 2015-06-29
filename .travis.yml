@@ -7,9 +7,9 @@ env:
 - PATH=$PATH:$HOME/gcloud/google-cloud-sdk/bin PYTHONPATH=${HOME}/gcloud/google-cloud-sdk/platform/google_appengine
 before_install:
 - openssl aes-256-cbc -K $encrypted_4cb330591e04_key -iv $encrypted_4cb330591e04_iv
-  -in cont-deployment.json.enc -out cont-deployment.json -d
-- openssl aes-256-cbc -K $encrypted_4cb330591e04_key -iv $encrypted_4cb330591e04_iv
   -in api_key.py.enc -out api_key.py -d
+- openssl aes-256-cbc -K $encrypted_4cb330591e04_key -iv $encrypted_4cb330591e04_iv
+  -in cont-deployment.json.enc -out cont-deployment.json -d
 - if [ ! -d $HOME/gcloud/google-cloud-sdk ]; then mkdir -p $HOME/gcloud && wget https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz
   --directory-prefix=$HOME/gcloud && cd $HOME/gcloud && tar xzf google-cloud-sdk.tar.gz
   && printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh && cd $TRAVIS_BUILD_DIR;
@@ -17,7 +17,7 @@ before_install:
 - if [ -a silver-python.json ]; then gcloud auth activate-service-account --key-file
   continuous-deployment.json; fi
 install:
-- gcloud config set project continuous-deployment-python 
+- gcloud config set project continuous-deployment-python
 - gcloud -q components update gae-python
 - pip install -r requirements.txt -t lib/
 script:
