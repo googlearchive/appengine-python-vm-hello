@@ -12,7 +12,6 @@ import urllib2
 import logging
 
 HOST='http://continuous-deployment-python.appspot.com'
-HOST='http://continuous-deployment-python.appspot.com'
 
 response = urllib2.urlopen("{}/get_author/ulysses".format(HOST))
 html = response.read()
