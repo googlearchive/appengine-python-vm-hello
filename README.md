@@ -39,4 +39,3 @@ After successfully setting up your project, you can either [run locally](https:/
 * See LICENSE
 
 [1]: https://cloud.google.com/appengine/docs/managed-vms/
-
