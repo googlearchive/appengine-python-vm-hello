@@ -24,7 +24,7 @@ def get_author(title):
     request = urllib2.Request(host)
     try:
         response = urllib2.urlopen(request)
-    except urrllib2.HTTPError, error:
+    except urllib2.HTTPError, error:
         contents = error.read()
         return str(contents)
     html = response.read()
