@@ -14,8 +14,7 @@ before_install:
   fi
 - tar -xzf credentials.tar.gz
 - mkdir -p lib
-- if [ -a silver-python.json ]; then gcloud auth activate-service-account --key-file
-  continuous-deployment.json; fi
+- gcloud auth activate-service-account --key-file continuous-deployment.json
 install:
 - gcloud config set project continuous-deployment-python
 - gcloud -q components update gae-python
