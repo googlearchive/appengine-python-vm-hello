@@ -13,6 +13,7 @@ before_install:
   && printf '\ny\n\ny\ny\n' | ./google-cloud-sdk/install.sh && cd $TRAVIS_BUILD_DIR;
   fi
 - tar -xzf credentials.tar.gz
+- mkdir -p lib
 - if [ -a silver-python.json ]; then gcloud auth activate-service-account --key-file
   continuous-deployment.json; fi
 install:
