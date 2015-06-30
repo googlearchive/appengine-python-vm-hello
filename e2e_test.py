@@ -15,6 +15,7 @@ HOST='http://continuous-deployment-python.appspot.com'
 
 response = urllib2.urlopen("{}/get_author/ulysses".format(HOST))
 html = response.read()
+print(html)
 assert(html == "James Joyce")
 
 
