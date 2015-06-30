@@ -20,7 +20,7 @@ from api_key import key
 
 @app.route('/get_author/<title>')
 def get_author(title):
-    host = 'https://www.googleapis.com/books/v1/volume?q={}&key={}&country=US'.format(title, api_key)
+    host = 'https://www.googleapis.com/books/v1/volume?q={}&key={}&country=US'.format(title, key)
     request = urllib2.Request(host)
     response = urllib2.urlopen(request)
     html = response.read()
