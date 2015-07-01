@@ -1,36 +1,70 @@
-# Copyright 2015, Google, Inc.
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-# this file except in compliance with the License. You may obtain a copy of the
-# License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable
-# law or agreed to in writing, software distributed under the License is distributed
-# on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-# or implied. See the License for the specific language governing permissions and
-# limitations under the License.
+"""A simple 'hello world' sample, which accesses the 'users' service,
+and shows how to get information about the current instance.
+"""
+
+import logging
+import os
+
+import jinja2
+import webapp2
+
+from google.appengine.api import app_identity
+from google.appengine.api import modules
+from google.appengine.api import users
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'])
 
 
-import urllib2
-import json
-from google.appengine.ext import vendor
-vendor.add('lib')
+def get_url_for_instance(instance_id):
+    """Return a full url of the current instance.
+    Args:
+        A string to represent an VM instance.
+    Returns:
+        URL string for the instance.
+    """
+    hostname = app_identity.get_default_version_hostname()
+    return 'http://{}.{}.{}'.format(
+        instance_id, modules.get_current_version_name(), hostname)
 
-from flask import Flask
-app = Flask(__name__)
 
-from api_key import key
+def get_signin_navigation(original_url):
+    """Return a pair of a link text and a link for logging in/out.
+    Args:
+        An original URL.
+    Returns:
+        Two-value tuple; a url and a link text.
+    """
+    if users.get_current_user():
+        url = users.create_logout_url(original_url)
+        url_linktext = 'Logout'
+    else:
+        url = users.create_login_url(original_url)
+        url_linktext = 'Login'
+    return url, url_linktext
 
-@app.route('/get_author/<title>')
-def get_author(title):
-    host = 'https://www.googleapis.com/books/v1/volumes?q={}&key={}&country=US'.format(title, key)
-    request = urllib2.Request(host)
-    try:
-        response = urllib2.urlopen(request)
-    except urllib2.HTTPError, error:
-        contents = error.read()
-        print ('Received error from Books API {}'.format(contents))
-        return str(contents)
-    html = response.read()
-    author = json.loads(html)['items'][0]['volumeInfo']['authors'][0]
-    return author
 
-if __name__ == '__main__':
-    app.run(debug=True)
+class Hello(webapp2.RequestHandler):
+    """Display a greeting, using user info if logged in, and display information
+    about the instance.
+    """
+
+    def get(self):
+        """Display a 'Hello' message"""
+        instance_id = modules.get_current_instance_id()
+        message = 'Hello'
+        if users.get_current_user():
+            nick = users.get_current_user().nickname()
+            message += ', %s' % nick
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        url, url_linktext = get_signin_navigation(self.request.uri)
+        self.response.out.write(template.render(instance_url=get_url_for_instance(instance_id),
+                                                url=url,
+                                                url_linktext=url_linktext,
+                                                message=message))
+
+
+APPLICATION = webapp2.WSGIApplication([
+    ('/', Hello)
+], debug=True)
