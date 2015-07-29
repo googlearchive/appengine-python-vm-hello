@@ -2,7 +2,7 @@ Copyright (C) 2014 Google Inc.
 
 # Sample 'hello world' application for use with the App Engine Python Managed VMs.
 
-[![Build Status](https://travis-ci.org/GoogleCloudPlatform/hello-sample-appengine-vm-python.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/hello-sample-appengine-vm-python)
+[![Build Status](https://travis-ci.org/GoogleCloudPlatform/appengine-python-vm-hello.svg?branch=master)](https://travis-ci.org/GoogleCloudPlatform/appengine-python-vm-hello)
 
 A simple Python VM Runtime 'hello world' example, which accesses the 'Users' service, and shows how to get information about the current instance.
 
