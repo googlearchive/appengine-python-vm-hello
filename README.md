@@ -1,3 +1,7 @@
+![status: inactive](https://img.shields.io/badge/status-inactive-red.svg)
+
+This repository is deprecated and no longer maintained, the sample has been *moved* to [GoogleCloudPlatform/python-docs-samples](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/master/managed_vms/hello_world).
+
 Copyright (C) 2014 Google Inc.
 
 # Sample 'hello world' application for use with the App Engine Python Managed VMs.
