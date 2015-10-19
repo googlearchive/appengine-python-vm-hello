@@ -32,7 +32,7 @@ The output of this command will present you the URL your app is now running on. 
 
 Next, [deploy to production](https://cloud.google.com/appengine/docs/managed-vms/sdk#deploy) using the `app deploy` command:
 
-	$ gcloud preview app deploy yaml
+	$ gcloud preview app deploy app.yaml
 
 Congratulations! You've successfully deployed the Hello World app! Go to the URL specified in the output of your command and enjoy your hard work.
 
